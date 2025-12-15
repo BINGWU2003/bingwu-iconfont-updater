@@ -1,6 +1,6 @@
 {
   "name": "bingwu-iconfont-updater",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "自动更新阿里巴巴图标库CSS文件的工具",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
