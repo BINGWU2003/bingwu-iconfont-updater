@@ -1,0 +1,39 @@
+{
+  "name": "bingwu-iconfont-updater",
+  "version": "1.0.0",
+  "description": "自动更新阿里巴巴图标库CSS文件的工具",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "bingwu-iconfont-updater": "./dist/bin/cli.js",
+    "iconfont-updater": "./dist/bin/cli.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepare": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "iconfont",
+    "alibaba",
+    "css",
+    "updater",
+    "自动更新",
+    "阿里巴巴图标库"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  }
+}
