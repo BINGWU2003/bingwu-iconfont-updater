@@ -18,6 +18,9 @@ backup/
 coverage/
 .nyc_output/
 
+# 测试临时文件
+test-tmp/
+
 # 临时文件
 *.tmp
 .cache/

@@ -8,9 +8,5 @@ export default defineConfig({
   format: ["cjs"],
   dts: true,
   clean: true,
-  sourcemap: true,
-  splitting: false,
-  minify: false,
-  shims: true,
-  target: "node12",
+  target: "esnext",
 });

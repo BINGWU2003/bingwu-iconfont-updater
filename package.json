@@ -12,7 +12,10 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "prepare": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [
     "iconfont",
@@ -25,15 +28,21 @@
   "author": "",
   "license": "MIT",
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=18.0.0"
   },
   "files": [
     "dist",
     "README.md"
   ],
+  "dependencies": {
+    "consola": "^3.2.3"
+  },
   "devDependencies": {
     "@types/node": "^20.0.0",
+    "@vitest/ui": "^2.1.0",
+    "@vitest/coverage-v8": "^2.1.0",
     "tsup": "^8.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
   }
 }

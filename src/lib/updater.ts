@@ -3,6 +3,7 @@ import * as http from "http";
 import * as fs from "fs";
 import * as path from "path";
 import * as crypto from "crypto";
+import { consola } from "consola";
 
 export interface IconfontUpdaterConfig {
   url?: string;
@@ -53,7 +54,7 @@ class IconfontUpdater {
         return fs.readFileSync(this.config.output, "utf8");
       }
     } catch (error) {
-      console.warn("读取现有文件失败:", (error as Error).message);
+      consola.warn("读取现有文件失败:", (error as Error).message);
     }
     return null;
   }
@@ -94,7 +95,7 @@ class IconfontUpdater {
 
       return backupFile;
     } catch (error) {
-      console.warn("创建备份失败:", (error as Error).message);
+      consola.warn("创建备份失败:", (error as Error).message);
       return null;
     }
   }
@@ -112,7 +113,7 @@ class IconfontUpdater {
         ) {
           const redirectUrl = res.headers.location;
           if (redirectUrl) {
-            console.log(`  检测到重定向: ${redirectUrl}`);
+            consola.info(`检测到重定向: ${redirectUrl}`);
             return this.downloadCSS(
               redirectUrl.startsWith("http")
                 ? redirectUrl
@@ -172,12 +173,11 @@ class IconfontUpdater {
 
   async update(): Promise<UpdateResult> {
     try {
-      console.log("=".repeat(50));
-      console.log("图标CSS自动更新工具");
-      console.log("=".repeat(50));
-      console.log(`URL: ${this.config.url}`);
-      console.log(`输出文件: ${this.config.output}`);
-      console.log("");
+      consola.box("图标CSS自动更新工具");
+
+      consola.info(`URL: ${this.config.url}`);
+      consola.info(`输出文件: ${this.config.output}`);
+      consola.log("");
 
       const existingContent = this.readExistingFile();
       const existingHash = existingContent
@@ -185,47 +185,41 @@ class IconfontUpdater {
         : null;
 
       if (existingContent) {
-        console.log("✓ 检测到现有文件");
+        consola.success("检测到现有文件");
       } else {
-        console.log("ℹ 未找到现有文件,将创建新文件");
+        consola.info("未找到现有文件,将创建新文件");
       }
-      console.log("");
 
-      console.log("开始下载最新CSS文件...");
+      consola.start("开始下载最新CSS文件...");
       const startTime = Date.now();
       const cssContent = await this.downloadCSS(this.config.url);
       const downloadTime = Date.now() - startTime;
 
       const newHash = this.getFileHash(cssContent);
-      console.log(
-        `✓ 下载完成 (耗时: ${downloadTime}ms, 大小: ${cssContent.length} 字节)`
+      consola.success(
+        `下载完成 (耗时: ${downloadTime}ms, 大小: ${cssContent.length} 字节)`
       );
-      console.log("");
 
       if (existingHash === newHash) {
-        console.log("ℹ 文件内容未发生变化,无需更新");
-        console.log(`更新时间: ${new Date().toLocaleString("zh-CN")}`);
+        consola.info("文件内容未发生变化,无需更新");
+        consola.info(`更新时间: ${new Date().toLocaleString("zh-CN")}`);
         return { updated: false, hash: newHash };
       }
 
-      console.log("创建备份...");
+      consola.start("创建备份...");
       const backupFile = this.createBackup();
       if (backupFile) {
-        console.log(`✓ 备份已创建: ${path.basename(backupFile)}`);
+        consola.success(`备份已创建: ${path.basename(backupFile)}`);
       } else {
-        console.log("ℹ 跳过备份(首次更新或备份失败)");
+        consola.info("跳过备份(首次更新或备份失败)");
       }
-      console.log("");
 
-      console.log("保存新文件...");
+      consola.start("保存新文件...");
       await this.saveCSS(cssContent);
-      console.log(`✓ 文件已更新: ${this.config.output}`);
-      console.log("");
+      consola.success(`文件已更新: ${this.config.output}`);
 
-      console.log("=".repeat(50));
-      console.log("✅ 更新成功!");
-      console.log(`更新时间: ${new Date().toLocaleString("zh-CN")}`);
-      console.log("=".repeat(50));
+      consola.success("✨ 更新成功!");
+      consola.info(`更新时间: ${new Date().toLocaleString("zh-CN")}`);
 
       return {
         updated: true,
@@ -233,17 +227,12 @@ class IconfontUpdater {
         backupFile: backupFile || undefined,
       };
     } catch (error) {
-      console.error("");
-      console.error("=".repeat(50));
-      console.error("❌ 更新失败");
-      console.error("=".repeat(50));
-      console.error(`错误信息: ${(error as Error).message}`);
+      consola.error("更新失败");
+      consola.error(`错误信息: ${(error as Error).message}`);
       if ((error as Error).stack) {
-        console.error("");
-        console.error("错误堆栈:");
-        console.error((error as Error).stack);
+        consola.debug("错误堆栈:");
+        consola.debug((error as Error).stack);
       }
-      console.error("");
       throw error;
     }
   }
